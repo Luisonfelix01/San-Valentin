@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Be My Valentine?</title>
+    <title>Quieres ser mi san Valentin?</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         body {
@@ -73,11 +73,11 @@
     <div id="main-container">
         <img id="displayImg" src="asking.gif" alt="Asking...">
         
-        <h1 id="question">Do you want to be my valentine?</h1>
+        <h1 id="question">Quieres ser mi san Valentin?</h1>
 
         <div class="btn-wrapper" id="btnWrapper">
-            <button id="yesBtn" onclick="handleYes()">Yes</button>
-            <button id="noBtn" onclick="handleNo()">No</button>
+            <button id="yesBtn" onclick="handleYes()">Obvio :)</button>
+            <button id="noBtn" onclick="handleNo()">Claro que no:(</button>
         </div>
     </div>
 
@@ -117,7 +117,7 @@
             music.play().catch(error => console.log("Audio play failed:", error));
 
             // UI Changes
-            questionText.innerText = "Yay! See you then! ❤️";
+            questionText.innerText = "Yay! Te Amoooo ❤️";
             document.getElementById('btnWrapper').style.display = 'none';
             displayImg.src = "happy.gif";
             displayImg.style.width = "280px";
@@ -135,3 +135,4 @@
     </script>
 </body>
 </html>
+
