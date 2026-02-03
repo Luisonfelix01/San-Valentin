@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Be My Valentine?</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #ffebee;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+        }
+
+        #main-container {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        img {
+            width: 230px;
+            height: auto;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+            object-fit: cover;
+        }
+
+        h1 {
+            color: #d32f2f;
+            margin-bottom: 40px;
+            font-size: 2.2rem;
+            z-index: 10;
+            padding: 0 20px;
+        }
+
+        .btn-wrapper {
+            position: relative;
+            width: 100%;
+            height: 150px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        button {
+            padding: 15px 35px;
+            font-size: 20px;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.2s ease-out, left 0.3s ease, top 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        #yesBtn {
+            background-color: #4caf50;
+            color: white;
+            z-index: 5;
+        }
+
+        #noBtn {
+            background-color: #f44336;
+            color: white;
+            position: absolute;
+            left: calc(50% + 80px);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="main-container">
+        <img id="displayImg" src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHYybmN6dzI4cHJqZzJreHBoZzRyeGZ4eHBoZzRyeGZ4eHBoZzRyeCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/cLS1cfxvGOPVpf9g3y/giphy.gif" alt="Cute Cat">
+        
+        <h1 id="question">Do you want to be my valentine?</h1>
+
+        <div class="btn-wrapper" id="btnWrapper">
+            <button id="yesBtn" onclick="handleYes()">Yes</button>
+            <button id="noBtn" onclick="handleNo()">No</button>
+        </div>
+    </div>
+
+    <script>
+        let noCount = 0;
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+        const displayImg = document.getElementById('displayImg');
+        const questionText = document.getElementById('question');
+
+        // Stable URLs
+        const sadGif = "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExbmN4eHBoZzRyeGZ4eHBoZzRyeGZ4eHBoZzRyeGZ4eHBoZzR5JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/OPU6wUKARA3NTAD6T0/giphy.gif";
+        const happyGif = "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExbmN4eHBoZzRyeGZ4eHBoZzRyeGZ4eHBoZzRyeGZ4eHBoZzR5JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/KztT2c4u8mYYUiMKdJ/giphy.gif";
+
+        function handleNo() {
+            noCount++;
+            
+            const noScale = Math.max(0.1, 1 - (noCount * 0.12));
+            const moveOffset = 80 + (noCount * 70); 
+            
+            noBtn.style.left = `calc(50% + ${moveOffset}px)`;
+            noBtn.style.transform = `scale(${noScale})`;
+
+            const yesScale = 1 + (noCount * 1.4);
+            yesBtn.style.transform = `scale(${yesScale})`;
+
+            if (noCount >= 2) {
+                displayImg.src = sadGif;
+            }
+
+            if (noScale <= 0.2) {
+                noBtn.style.opacity = '0';
+                setTimeout(() => noBtn.style.display = 'none', 300);
+            }
+        }
+
+        function handleYes() {
+            questionText.innerText = "Yay! See you on the 14th! ❤️";
+            document.getElementById('btnWrapper').style.display = 'none';
+            displayImg.src = happyGif;
+            displayImg.style.width = "280px";
+
+            // Fireworks/Confetti logic
+            const duration = 15 * 1000;
+            const animationEnd = Date.now() + duration;
+            const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+            function randomInRange(min, max) {
+              return Math.random() * (max - min) + min;
+            }
+
+            const interval = setInterval(function() {
+              const timeLeft = animationEnd - Date.now();
+              if (timeLeft <= 0) return clearInterval(interval);
+
+              const particleCount = 50 * (timeLeft / duration);
+              confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+              confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+            }, 250);
+        }
+    </script>
+</body>
+</html>
