@@ -33,7 +33,6 @@
             margin-bottom: 20px;
             box-shadow: 0 10px 20px rgba(0,0,0,0.15);
             transition: all 0.3s ease;
-            object-fit: cover;
         }
 
         h1 {
@@ -41,7 +40,6 @@
             margin-bottom: 40px;
             font-size: 2.2rem;
             z-index: 10;
-            padding: 0 20px;
         }
 
         .btn-wrapper {
@@ -60,28 +58,20 @@
             border: none;
             border-radius: 50px;
             cursor: pointer;
-            transition: transform 0.2s ease-out, left 0.3s ease, top 0.3s ease;
+            transition: transform 0.2s ease-out, left 0.3s ease;
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
 
-        #yesBtn {
-            background-color: #4caf50;
-            color: white;
-            z-index: 5;
-        }
-
-        #noBtn {
-            background-color: #f44336;
-            color: white;
-            position: absolute;
-            left: calc(50% + 80px);
-        }
+        #yesBtn { background-color: #4caf50; color: white; z-index: 5; }
+        #noBtn { background-color: #f44336; color: white; position: absolute; left: calc(50% + 80px); }
     </style>
 </head>
 <body>
 
+    <audio id="valentineMusic" src="music.mp3" preload="auto"></audio>
+
     <div id="main-container">
-        <img id="displayImg" src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHYybmN6dzI4cHJqZzJreHBoZzRyeGZ4eHBoZzRyeGZ4eHBoZzRyeCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/cLS1cfxvGOPVpf9g3y/giphy.gif" alt="Cute Cat">
+        <img id="displayImg" src="asking.gif" alt="Asking...">
         
         <h1 id="question">Do you want to be my valentine?</h1>
 
@@ -97,56 +87,50 @@
         const noBtn = document.getElementById('noBtn');
         const displayImg = document.getElementById('displayImg');
         const questionText = document.getElementById('question');
-
-        // Stable URLs
-        const sadGif = "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExbmN4eHBoZzRyeGZ4eHBoZzRyeGZ4eHBoZzRyeGZ4eHBoZzR5JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/OPU6wUKARA3NTAD6T0/giphy.gif";
-        const happyGif = "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExbmN4eHBoZzRyeGZ4eHBoZzRyeGZ4eHBoZzRyeGZ4eHBoZzR5JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/KztT2c4u8mYYUiMKdJ/giphy.gif";
+        const music = document.getElementById('valentineMusic');
 
         function handleNo() {
             noCount++;
             
+            // Move No button away and shrink it
             const noScale = Math.max(0.1, 1 - (noCount * 0.12));
             const moveOffset = 80 + (noCount * 70); 
-            
             noBtn.style.left = `calc(50% + ${moveOffset}px)`;
             noBtn.style.transform = `scale(${noScale})`;
 
-            const yesScale = 1 + (noCount * 1.4);
+            // Grow Yes button
+            const yesScale = 1 + (noCount * 1.5);
             yesBtn.style.transform = `scale(${yesScale})`;
 
+            // Change to sad GIF after 2 attempts
             if (noCount >= 2) {
-                displayImg.src = sadGif;
+                displayImg.src = "sad.gif";
             }
 
             if (noScale <= 0.2) {
-                noBtn.style.opacity = '0';
-                setTimeout(() => noBtn.style.display = 'none', 300);
+                noBtn.style.display = 'none';
             }
         }
 
         function handleYes() {
-            questionText.innerText = "Yay! See you on the 14th! ❤️";
+            // Play Music
+            music.play().catch(error => console.log("Audio play failed:", error));
+
+            // UI Changes
+            questionText.innerText = "Yay! See you then! ❤️";
             document.getElementById('btnWrapper').style.display = 'none';
-            displayImg.src = happyGif;
+            displayImg.src = "happy.gif";
             displayImg.style.width = "280px";
 
-            // Fireworks/Confetti logic
+            // Fireworks
             const duration = 15 * 1000;
             const animationEnd = Date.now() + duration;
-            const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
-
-            function randomInRange(min, max) {
-              return Math.random() * (max - min) + min;
-            }
-
             const interval = setInterval(function() {
-              const timeLeft = animationEnd - Date.now();
-              if (timeLeft <= 0) return clearInterval(interval);
-
-              const particleCount = 50 * (timeLeft / duration);
-              confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
-              confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
-            }, 250);
+                const timeLeft = animationEnd - Date.now();
+                if (timeLeft <= 0) return clearInterval(interval);
+                confetti({ particleCount: 40, spread: 70, origin: { x: 0.2, y: 0.6 } });
+                confetti({ particleCount: 40, spread: 70, origin: { x: 0.8, y: 0.6 } });
+            }, 300);
         }
     </script>
 </body>
